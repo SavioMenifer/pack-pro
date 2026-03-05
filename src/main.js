@@ -2,7 +2,7 @@ import 'xrblocks/addons/simulator/SimulatorAddons.js';
 
 import * as xb from 'xrblocks';
 
-import {PackingAssistant} from './PackingAssistant.js';
+import {GeminiManager} from './GeminiManager.js';
 
 const options = new xb.Options();
 options.enableUI();
@@ -43,7 +43,7 @@ async function start() {
   try {
     await requestAudioPermission();
     xb.init(options);
-    xb.add(new PackingAssistant());
+    xb.add(new GeminiManager());
   } catch (error) {
     console.error('Failed to initialize XR app:', error);
   }
