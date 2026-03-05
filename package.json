@@ -1,0 +1,11 @@
+{
+  "name": "pack-pro",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "web-dev-server --config web-dev-server.config.mjs"
+  },
+  "devDependencies": {
+    "@web/dev-server": "^0.4.6"
+  }
+}
