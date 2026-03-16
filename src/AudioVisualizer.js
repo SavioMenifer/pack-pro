@@ -1,7 +1,7 @@
 import * as THREE from "three";
 
-const BASE_SCALE = 0.027;
-const MAX_EXTRA_SCALE = 0.02;
+const BASE_SCALE = 0.018;
+const MAX_EXTRA_SCALE = 0.014;
 const SMOOTH = 0.15; // lerp factor — lower = smoother/slower
 
 export const VISUALIZER_COLORS = {
@@ -15,12 +15,11 @@ export const VISUALIZER_COLORS = {
 
 export class AudioVisualizer {
   constructor() {
-    const geometry = new THREE.CircleGeometry(1, 64);
+    const geometry = new THREE.SphereGeometry(1, 32, 32);
     this._material = new THREE.MeshBasicMaterial({
       color: VISUALIZER_COLORS.CONNECTING,
       transparent: true,
       opacity: 0.85,
-      side: THREE.DoubleSide,
     });
     this.mesh = new THREE.Mesh(geometry, this._material);
     this.mesh.scale.setScalar(BASE_SCALE);

@@ -65,6 +65,7 @@ export class WelcomePanel {
 
     grid.addRow({ weight: 0.06 }); // bottom spacer
 
-    this.panel.position.set(0, 1.2, -2);
+    this.panel.position.set(0, 1.6, -1.5);
+    this.panel.scale.setScalar(0.5);
   }
 }

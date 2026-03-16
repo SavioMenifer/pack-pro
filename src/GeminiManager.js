@@ -1,3 +1,4 @@
+import * as THREE from "three";
 import * as xb from "xrblocks";
 import { GeminiManager as CoreGeminiManager } from "xrblocks/addons/ai/GeminiManager.js";
 
@@ -45,6 +46,7 @@ export class GeminiManager extends CoreGeminiManager {
 
   init() {
     super.init();
+    this.cameraQuality = 0.5; // reduce image token cost
     this._buildTextPanel();
 
     if (SPATIAL_ANCHOR_ENABLED) {
@@ -129,17 +131,19 @@ export class GeminiManager extends CoreGeminiManager {
 
   _syncVisualizerPosition() {
     if (!this._visualizer || !this.textPanel) return;
-    const p = this.textPanel.position;
-    // Panel bottom edge: p.y - 1.1. Button row (0.22) + status row (0.132) up from bottom.
-    // Place orb just above the status row: bottom_edge + 0.22 + 0.132 + small gap
-    this._visualizer.mesh.position.set(p.x, p.y - 1.1 + 0.22 + 0.132 + 0.06, p.z);
+    // Compute world position of the target point in panel-local space
+    // Panel local y: bottom edge = -1.1, button row (0.22) + status row (0.132) up
+    const localY = -1.1 + 0.22 + 0.132 + 0.25;
+    const worldPos = new THREE.Vector3(0, localY, 0);
+    worldPos.applyMatrix4(this.textPanel.matrixWorld);
+    this._visualizer.mesh.position.copy(worldPos);
   }
 
   _transitionToPhase(phase) {
     console.log("[phase] transitioning to:", phase);
     this.phase = phase;
     if (phase === PHASES.PACKING) {
-      this._restoreScreenshots();
+      this._restoreScreenshots(15000);
       this.ai.sendRealtimeInput({ text: this._buildListSummary() });
       this.spatialAnchor?.detect();
     } else if (phase === PHASES.DONE) {
@@ -176,9 +180,9 @@ export class GeminiManager extends CoreGeminiManager {
     }
   }
 
-  _restoreScreenshots() {
+  _restoreScreenshots(intervalMs = 15000) {
     if (this.phase === PHASES.PACKING && !this.screenshotInterval) {
-      this.startScreenshotCapture(5000);
+      this.startScreenshotCapture(intervalMs);
     }
   }
 
@@ -197,8 +201,14 @@ export class GeminiManager extends CoreGeminiManager {
           systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
           thinkingConfig: { thinkingBudget: 0 },
           contextWindowCompression: {
-            triggerTokens: 25600,
-            slidingWindow: { targetTokens: 12800 },
+            triggerTokens: 8192,
+            slidingWindow: { targetTokens: 4096 },
+          },
+          generationConfig: {
+            mediaResolution: "MEDIA_RESOLUTION_LOW",
+          },
+          realtimeInputConfig: {
+            turnCoverage: "TURN_INCLUDES_AUDIO_ACTIVITY_AND_ALL_VIDEO",
           },
           tools: [{ googleSearch: {} }],
         },
@@ -271,8 +281,14 @@ export class GeminiManager extends CoreGeminiManager {
           systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
           thinkingConfig: { thinkingBudget: 0 },
           contextWindowCompression: {
-            triggerTokens: 25600,
-            slidingWindow: { targetTokens: 12800 },
+            triggerTokens: 8192,
+            slidingWindow: { targetTokens: 4096 },
+          },
+          generationConfig: {
+            mediaResolution: "MEDIA_RESOLUTION_LOW",
+          },
+          realtimeInputConfig: {
+            turnCoverage: "TURN_INCLUDES_AUDIO_ACTIVITY_AND_ALL_VIDEO",
           },
           tools: [{ googleSearch: {} }],
         },
@@ -376,7 +392,9 @@ Already packed: ${packed.length ? packed.join(", ") : "none"}]`;
     });
     this._muteButton.onTriggered = () => this._toggleMute();
 
-    this.textPanel.position.set(-2.2, 1.2, -2);
+    this.textPanel.position.set(-0.8, 1.6, -1.5);
+    this.textPanel.scale.setScalar(0.5);
+    this.textPanel.rotation.y = Math.PI / 8;
 
     this._visualizer = new AudioVisualizer();
     this._visualizer.mesh.visible = false;

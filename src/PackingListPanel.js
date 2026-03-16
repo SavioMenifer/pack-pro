@@ -51,7 +51,9 @@ export class PackingListPanel {
     });
     grid.addRow({ weight: 0.89 }).add(this._listText);
 
-    this.panel.position.set(2.2, 1.2, -2);
+    this.panel.position.set(0.8, 1.6, -1.5);
+    this.panel.scale.setScalar(0.5);
+    this.panel.rotation.y = -Math.PI / 8;
     this._render();
   }
 
