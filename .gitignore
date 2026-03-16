@@ -4,4 +4,3 @@ dist/
 *.local
 keys.json
 .claude/
-.firebaserc
