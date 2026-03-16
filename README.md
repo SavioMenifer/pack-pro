@@ -1,6 +1,6 @@
-# Porter — AR Packing Guide
+# Pack Pro — AR Packing Guide
 
-An augmented reality packing assistant powered by Gemini Live. Porter uses your device camera and live voice conversation to help you plan trips and pack your luggage — watching what you pack and checking items off the list in real time.
+An augmented reality packing assistant powered by Gemini Live. Pack Pro uses your device camera and live voice conversation to help you plan trips and pack your luggage — watching what you pack and checking items off the list in real time.
 
 Built with [xrblocks](https://github.com/google/xrblocks) and the Gemini Live API.
 
@@ -8,8 +8,8 @@ Built with [xrblocks](https://github.com/google/xrblocks) and the Gemini Live AP
 
 ## How it works
 
-1. **TRIP_SETUP** — speak your trip details (destination, duration, bags). Porter builds a packing list.
-2. **PACKING** — confirm you're ready. The camera activates. Porter watches you pack and marks items off as it sees them.
+1. **TRIP_SETUP** — speak your trip details (destination, duration, bags). Pack Pro builds a packing list.
+2. **PACKING** — confirm you're ready. The camera activates. Pack Pro watches you pack and marks items off as it sees them.
 3. **DONE** — all packed. Ask any remaining questions.
 
 ---
@@ -103,7 +103,7 @@ pack-pro/
 │   ├── WelcomePanel.js           # Intro screen with Start button
 │   ├── TranscriptionManager.js   # Live conversation display
 │   ├── SpatialAnchorManager.js   # Corner bracket overlay on detected bag
-│   ├── systemPrompt.js           # Porter's system prompt
+│   ├── systemPrompt.js           # Pack Pro's system prompt
 │   ├── constants.js              # PHASES, CATEGORIES, feature flags
 │   └── tools/                    # Gemini function calling tools
 │       ├── setPackingList.js     # Build initial list in one call
