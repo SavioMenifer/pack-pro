@@ -28,7 +28,7 @@ export class TranscriptionManager {
       this.conversationHistory.push({speaker: 'You', text: this.currentInputText.trim()});
     }
     if (this.currentOutputText.trim()) {
-      this.conversationHistory.push({speaker: 'Porter', text: this.currentOutputText.trim()});
+      this.conversationHistory.push({speaker: 'Pack Pro', text: this.currentOutputText.trim()});
     }
     this.currentInputText = '';
     this.currentOutputText = '';
@@ -45,7 +45,7 @@ export class TranscriptionManager {
     }
     if (this.currentOutputText.trim()) {
       if (this.currentInputText.trim()) text += '\n\n';
-      text += `Porter: ${this.currentOutputText.trim()}`;
+      text += `Pack Pro: ${this.currentOutputText.trim()}`;
     }
     return text;
   }
