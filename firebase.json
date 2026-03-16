@@ -1,0 +1,15 @@
+{
+  "hosting": {
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      ".firebaserc",
+      "node_modules/**",
+      ".git/**",
+      ".claude/**",
+      "keys.json",
+      "*.local",
+      "package-lock.json"
+    ]
+  }
+}

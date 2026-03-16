@@ -4,72 +4,76 @@ export class TranscriptionManager {
     this.currentInputText = '';
     this.currentOutputText = '';
     this.conversationHistory = [];
+    this._displayedText = '';
   }
 
   handleInputTranscription(text) {
     if (!text) return;
     this.currentInputText += text;
-    this.updateLiveDisplay();
+    this._syncDisplay();
   }
 
   handleOutputTranscription(text) {
     if (!text) return;
     this.currentOutputText += text;
-    this.updateLiveDisplay();
+    this._syncDisplay();
+  }
+
+  handleInterrupted() {
+    // keep partial output — finalizeTurn will commit it to history
   }
 
   finalizeTurn() {
     if (this.currentInputText.trim()) {
-      this.conversationHistory.push({
-        speaker: 'You',
-        text: this.currentInputText.trim(),
-      });
+      this.conversationHistory.push({speaker: 'You', text: this.currentInputText.trim()});
     }
     if (this.currentOutputText.trim()) {
-      this.conversationHistory.push({
-        speaker: 'AI',
-        text: this.currentOutputText.trim(),
-      });
+      this.conversationHistory.push({speaker: 'Porter', text: this.currentOutputText.trim()});
     }
     this.currentInputText = '';
     this.currentOutputText = '';
-    this.updateFinalDisplay();
+    this._syncDisplay();
   }
 
-  updateLiveDisplay() {
-    let displayText = '';
-    for (const entry of this.conversationHistory.slice(-2)) {
-      displayText += `${entry.speaker}: ${entry.text}\n\n`;
+  _buildText() {
+    let text = '';
+    for (const entry of this.conversationHistory) {
+      text += `${entry.speaker}: ${entry.text}\n\n`;
     }
     if (this.currentInputText.trim()) {
-      displayText += `You: ${this.currentInputText}`;
+      text += `You: ${this.currentInputText.trim()}`;
     }
     if (this.currentOutputText.trim()) {
-      if (this.currentInputText.trim()) displayText += '\n\n';
-      displayText += `AI: ${this.currentOutputText}`;
+      if (this.currentInputText.trim()) text += '\n\n';
+      text += `Porter: ${this.currentOutputText.trim()}`;
     }
-    this.responseDisplay?.setText(displayText);
+    return text;
   }
 
-  updateFinalDisplay() {
-    let displayText = '';
-    for (const entry of this.conversationHistory) {
-      displayText += `${entry.speaker}: ${entry.text}\n\n`;
+  _syncDisplay() {
+    const newText = this._buildText();
+    const delta = newText.slice(this._displayedText.length);
+    if (delta) {
+      this.responseDisplay?.addText(delta);
+      this._displayedText = newText;
     }
-    this.responseDisplay?.setText(displayText);
   }
 
   clear() {
     this.currentInputText = '';
     this.currentOutputText = '';
     this.conversationHistory = [];
+    this._displayedText = '';
+    this.responseDisplay?.setText('');
   }
 
   addText(text) {
+    this._displayedText += text + '\n\n';
     this.responseDisplay?.addText(text + '\n\n');
   }
 
   setText(text) {
+    this._displayedText = text;
     this.responseDisplay?.setText(text);
   }
 }

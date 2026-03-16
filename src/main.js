@@ -3,6 +3,7 @@ import 'xrblocks/addons/simulator/SimulatorAddons.js';
 import * as xb from 'xrblocks';
 
 import {GeminiManager} from './GeminiManager.js';
+import {SPATIAL_ANCHOR_ENABLED} from './constants.js';
 
 const options = new xb.Options();
 options.enableUI();
@@ -42,6 +43,11 @@ async function requestAudioPermission() {
 async function start() {
   try {
     await requestAudioPermission();
+    if (SPATIAL_ANCHOR_ENABLED) {
+      options.depth.enabled = true;
+      options.depth.depthMesh.enabled = true;
+      options.world.enableObjectDetection();
+    }
     xb.init(options);
     xb.add(new GeminiManager());
   } catch (error) {

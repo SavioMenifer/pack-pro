@@ -3,3 +3,5 @@ dist/
 .vite/
 *.local
 keys.json
+.claude/
+.firebaserc
